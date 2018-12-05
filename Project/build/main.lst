@@ -1,0 +1,330 @@
+GAS LISTING /tmp/ccaM52Cu.s 			page 1
+
+
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.global	__vector_1
+  10               	__vector_1:
+  11 0000 1F92      		push r1
+  12 0002 0F92      		push r0
+  13 0004 0FB6      		in r0,__SREG__
+  14 0006 0F92      		push r0
+  15 0008 1124      		clr __zero_reg__
+  16 000a 8F93      		push r24
+  17 000c 9F93      		push r25
+  18               	/* prologue: Signal */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 5 */
+  21               	.L__stack_usage = 5
+  22 000e 8091 0000 		lds r24,i
+  23 0012 9091 0000 		lds r25,i+1
+  24 0016 0197      		sbiw r24,1
+  25 0018 01F4      		brne .L2
+  26 001a 1092 8100 		sts 129,__zero_reg__
+  27 001e 8091 8400 		lds r24,132
+  28 0022 9091 8500 		lds r25,132+1
+  29 0026 9093 0000 		sts pulse+1,r25
+  30 002a 8093 0000 		sts pulse,r24
+  31 002e 1092 8500 		sts 132+1,__zero_reg__
+  32 0032 1092 8400 		sts 132,__zero_reg__
+  33 0036 1092 0000 		sts i+1,__zero_reg__
+  34 003a 1092 0000 		sts i,__zero_reg__
+  35               	.L2:
+  36 003e 8091 0000 		lds r24,i
+  37 0042 9091 0000 		lds r25,i+1
+  38 0046 892B      		or r24,r25
+  39 0048 01F4      		brne .L1
+  40 004a 8091 8100 		lds r24,129
+  41 004e 8560      		ori r24,lo8(5)
+  42 0050 8093 8100 		sts 129,r24
+  43 0054 81E0      		ldi r24,lo8(1)
+  44 0056 90E0      		ldi r25,0
+  45 0058 9093 0000 		sts i+1,r25
+  46 005c 8093 0000 		sts i,r24
+  47               	.L1:
+  48               	/* epilogue start */
+  49 0060 9F91      		pop r25
+  50 0062 8F91      		pop r24
+  51 0064 0F90      		pop r0
+  52 0066 0FBE      		out __SREG__,r0
+  53 0068 0F90      		pop r0
+  54 006a 1F90      		pop r1
+  55 006c 1895      		reti
+  57               	.global	setup
+  59               	setup:
+  60               	/* prologue: function */
+GAS LISTING /tmp/ccaM52Cu.s 			page 2
+
+
+  61               	/* frame size = 0 */
+  62               	/* stack size = 0 */
+  63               	.L__stack_usage = 0
+  64 006e 219A      		sbi 0x4,1
+  65 0070 229A      		sbi 0x4,2
+  66 0072 229A      		sbi 0x4,2
+  67 0074 239A      		sbi 0x4,3
+  68 0076 249A      		sbi 0x4,4
+  69 0078 559A      		sbi 0xa,5
+  70 007a 0895      		ret
+  72               	.global	motorAforward
+  74               	motorAforward:
+  75               	/* prologue: function */
+  76               	/* frame size = 0 */
+  77               	/* stack size = 0 */
+  78               	.L__stack_usage = 0
+  79 007c 299A      		sbi 0x5,1
+  80 007e 2A98      		cbi 0x5,2
+  81 0080 0895      		ret
+  83               	.global	motorBforward
+  85               	motorBforward:
+  86               	/* prologue: function */
+  87               	/* frame size = 0 */
+  88               	/* stack size = 0 */
+  89               	.L__stack_usage = 0
+  90 0082 2C9A      		sbi 0x5,4
+  91 0084 5D98      		cbi 0xb,5
+  92 0086 0895      		ret
+  94               	.global	forward
+  96               	forward:
+  97               	/* prologue: function */
+  98               	/* frame size = 0 */
+  99               	/* stack size = 0 */
+ 100               	.L__stack_usage = 0
+ 101 0088 0E94 0000 		call motorAforward
+ 102 008c 0C94 0000 		jmp motorBforward
+ 104               	.global	motorAbackward
+ 106               	motorAbackward:
+ 107               	/* prologue: function */
+ 108               	/* frame size = 0 */
+ 109               	/* stack size = 0 */
+ 110               	.L__stack_usage = 0
+ 111 0090 2998      		cbi 0x5,1
+ 112 0092 2A9A      		sbi 0x5,2
+ 113 0094 0895      		ret
+ 115               	.global	motorBbackward
+ 117               	motorBbackward:
+ 118               	/* prologue: function */
+ 119               	/* frame size = 0 */
+ 120               	/* stack size = 0 */
+ 121               	.L__stack_usage = 0
+ 122 0096 2C98      		cbi 0x5,4
+ 123 0098 5D9A      		sbi 0xb,5
+ 124 009a 0895      		ret
+ 126               	.global	stop
+ 128               	stop:
+ 129               	/* prologue: function */
+GAS LISTING /tmp/ccaM52Cu.s 			page 3
+
+
+ 130               	/* frame size = 0 */
+ 131               	/* stack size = 0 */
+ 132               	.L__stack_usage = 0
+ 133 009c 299A      		sbi 0x5,1
+ 134 009e 2A9A      		sbi 0x5,2
+ 135 00a0 2C9A      		sbi 0x5,4
+ 136 00a2 5D9A      		sbi 0xb,5
+ 137 00a4 0895      		ret
+ 139               	.global	backward
+ 141               	backward:
+ 142               	/* prologue: function */
+ 143               	/* frame size = 0 */
+ 144               	/* stack size = 0 */
+ 145               	.L__stack_usage = 0
+ 146 00a6 0E94 0000 		call motorAbackward
+ 147 00aa 0C94 0000 		jmp motorBbackward
+ 149               	.global	right
+ 151               	right:
+ 152               	/* prologue: function */
+ 153               	/* frame size = 0 */
+ 154               	/* stack size = 0 */
+ 155               	.L__stack_usage = 0
+ 156 00ae 0E94 0000 		call motorAbackward
+ 157 00b2 0C94 0000 		jmp motorBforward
+ 159               		.section	.text.startup,"ax",@progbits
+ 160               	.global	main
+ 162               	main:
+ 163               	/* prologue: function */
+ 164               	/* frame size = 0 */
+ 165               	/* stack size = 0 */
+ 166               	.L__stack_usage = 0
+ 167 0000 0E94 0000 		call setup
+ 168 0004 2B9A      		sbi 0x5,3
+ 169 0006 289A      		sbi 0x5,0
+ 170 0008 509A      		sbi 0xa,0
+ 171 000a 5298      		cbi 0xa,2
+ 172 000c 8091 6900 		lds r24,105
+ 173 0010 8D6F      		ori r24,lo8(-3)
+ 174 0012 8093 6900 		sts 105,r24
+ 175 0016 E89A      		sbi 0x1d,0
+ 176               	/* #APP */
+ 177               	 ;  72 "src/main.c" 1
+ 178 0018 7894      		sei
+ 179               	 ;  0 "" 2
+ 180               	/* #NOAPP */
+ 181               	.L15:
+ 182 001a 589A      		sbi 0xb,0
+ 183 001c 20E5      		ldi r18,lo8(80)
+ 184 001e 2A95      	1:	dec r18
+ 185 0020 01F4      		brne 1b
+ 186 0022 5898      		cbi 0xb,0
+ 187 0024 8091 0000 		lds r24,pulse
+ 188 0028 9091 0000 		lds r25,pulse+1
+ 189 002c 4997      		sbiw r24,25
+ 190 002e 04F4      		brge .L16
+ 191 0030 0E94 0000 		call stop
+ 192 0034 8FEF      		ldi r24,lo8(959999)
+GAS LISTING /tmp/ccaM52Cu.s 			page 4
+
+
+ 193 0036 95EA      		ldi r25,hi8(959999)
+ 194 0038 2EE0      		ldi r18,hlo8(959999)
+ 195 003a 8150      	1:	subi r24,1
+ 196 003c 9040      		sbci r25,0
+ 197 003e 2040      		sbci r18,0
+ 198 0040 01F4      		brne 1b
+ 199 0042 00C0      		rjmp .
+ 200 0044 0000      		nop
+ 201 0046 0E94 0000 		call backward
+ 202 004a 8FEF      		ldi r24,lo8(1599999)
+ 203 004c 99E6      		ldi r25,hi8(1599999)
+ 204 004e 28E1      		ldi r18,hlo8(1599999)
+ 205 0050 8150      	1:	subi r24,1
+ 206 0052 9040      		sbci r25,0
+ 207 0054 2040      		sbci r18,0
+ 208 0056 01F4      		brne 1b
+ 209 0058 00C0      		rjmp .
+ 210 005a 0000      		nop
+ 211 005c 0E94 0000 		call stop
+ 212 0060 8FEF      		ldi r24,lo8(959999)
+ 213 0062 95EA      		ldi r25,hi8(959999)
+ 214 0064 2EE0      		ldi r18,hlo8(959999)
+ 215 0066 8150      	1:	subi r24,1
+ 216 0068 9040      		sbci r25,0
+ 217 006a 2040      		sbci r18,0
+ 218 006c 01F4      		brne 1b
+ 219 006e 00C0      		rjmp .
+ 220 0070 0000      		nop
+ 221 0072 0E94 0000 		call right
+ 222 0076 8FEF      		ldi r24,lo8(2239999)
+ 223 0078 9DE2      		ldi r25,hi8(2239999)
+ 224 007a 22E2      		ldi r18,hlo8(2239999)
+ 225 007c 8150      	1:	subi r24,1
+ 226 007e 9040      		sbci r25,0
+ 227 0080 2040      		sbci r18,0
+ 228 0082 01F4      		brne 1b
+ 229 0084 00C0      		rjmp .
+ 230 0086 0000      		nop
+ 231 0088 0E94 0000 		call stop
+ 232 008c 8FEF      		ldi r24,lo8(959999)
+ 233 008e 95EA      		ldi r25,hi8(959999)
+ 234 0090 2EE0      		ldi r18,hlo8(959999)
+ 235 0092 8150      	1:	subi r24,1
+ 236 0094 9040      		sbci r25,0
+ 237 0096 2040      		sbci r18,0
+ 238 0098 01F4      		brne 1b
+ 239 009a 00C0      		rjmp .L18
+ 240               	.L16:
+ 241 009c 0E94 0000 		call forward
+ 242 00a0 8FEF      		ldi r24,lo8(639999)
+ 243 00a2 93EC      		ldi r25,hi8(639999)
+ 244 00a4 29E0      		ldi r18,hlo8(639999)
+ 245 00a6 8150      	1:	subi r24,1
+ 246 00a8 9040      		sbci r25,0
+ 247 00aa 2040      		sbci r18,0
+ 248 00ac 01F4      		brne 1b
+ 249               	.L18:
+GAS LISTING /tmp/ccaM52Cu.s 			page 5
+
+
+ 250 00ae 00C0      		rjmp .
+ 251 00b0 0000      		nop
+ 252 00b2 00C0      		rjmp .L15
+ 254               		.text
+ 255               	.global	avoid
+ 257               	avoid:
+ 258               	/* prologue: function */
+ 259               	/* frame size = 0 */
+ 260               	/* stack size = 0 */
+ 261               	.L__stack_usage = 0
+ 262 00b6 0E94 0000 		call stop
+ 263 00ba 2FEF      		ldi r18,lo8(1599999)
+ 264 00bc 89E6      		ldi r24,hi8(1599999)
+ 265 00be 98E1      		ldi r25,hlo8(1599999)
+ 266 00c0 2150      	1:	subi r18,1
+ 267 00c2 8040      		sbci r24,0
+ 268 00c4 9040      		sbci r25,0
+ 269 00c6 01F4      		brne 1b
+ 270 00c8 00C0      		rjmp .
+ 271 00ca 0000      		nop
+ 272 00cc 0E94 0000 		call backward
+ 273 00d0 2FEF      		ldi r18,lo8(8959999)
+ 274 00d2 87EB      		ldi r24,hi8(8959999)
+ 275 00d4 98E8      		ldi r25,hlo8(8959999)
+ 276 00d6 2150      	1:	subi r18,1
+ 277 00d8 8040      		sbci r24,0
+ 278 00da 9040      		sbci r25,0
+ 279 00dc 01F4      		brne 1b
+ 280 00de 00C0      		rjmp .
+ 281 00e0 0000      		nop
+ 282 00e2 0E94 0000 		call stop
+ 283 00e6 2FEF      		ldi r18,lo8(1599999)
+ 284 00e8 89E6      		ldi r24,hi8(1599999)
+ 285 00ea 98E1      		ldi r25,hlo8(1599999)
+ 286 00ec 2150      	1:	subi r18,1
+ 287 00ee 8040      		sbci r24,0
+ 288 00f0 9040      		sbci r25,0
+ 289 00f2 01F4      		brne 1b
+ 290 00f4 00C0      		rjmp .
+ 291 00f6 0000      		nop
+ 292 00f8 0E94 0000 		call right
+ 293 00fc 2FEF      		ldi r18,lo8(63999)
+ 294 00fe 89EF      		ldi r24,hi8(63999)
+ 295 0100 90E0      		ldi r25,hlo8(63999)
+ 296 0102 2150      	1:	subi r18,1
+ 297 0104 8040      		sbci r24,0
+ 298 0106 9040      		sbci r25,0
+ 299 0108 01F4      		brne 1b
+ 300 010a 00C0      		rjmp .
+ 301 010c 0000      		nop
+ 302 010e 0895      		ret
+ 304               		.local	i
+ 305               		.comm	i,2,1
+ 306               		.local	pulse
+ 307               		.comm	pulse,2,1
+ 308               		.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.1_1752) 5.4.0"
+ 309               	.global __do_clear_bss
+GAS LISTING /tmp/ccaM52Cu.s 			page 6
+
+
+GAS LISTING /tmp/ccaM52Cu.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccaM52Cu.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccaM52Cu.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccaM52Cu.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccaM52Cu.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccaM52Cu.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccaM52Cu.s:10     .text:0000000000000000 __vector_1
+                             .bss:0000000000000000 i
+     /tmp/ccaM52Cu.s:305    .bss:0000000000000002 pulse
+     /tmp/ccaM52Cu.s:59     .text:000000000000006e setup
+     /tmp/ccaM52Cu.s:74     .text:000000000000007c motorAforward
+     /tmp/ccaM52Cu.s:85     .text:0000000000000082 motorBforward
+     /tmp/ccaM52Cu.s:96     .text:0000000000000088 forward
+     /tmp/ccaM52Cu.s:106    .text:0000000000000090 motorAbackward
+     /tmp/ccaM52Cu.s:117    .text:0000000000000096 motorBbackward
+     /tmp/ccaM52Cu.s:128    .text:000000000000009c stop
+     /tmp/ccaM52Cu.s:141    .text:00000000000000a6 backward
+     /tmp/ccaM52Cu.s:151    .text:00000000000000ae right
+     /tmp/ccaM52Cu.s:162    .text.startup:0000000000000000 main
+     /tmp/ccaM52Cu.s:257    .text:00000000000000b6 avoid
+
+UNDEFINED SYMBOLS
+__do_clear_bss

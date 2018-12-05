@@ -1,0 +1,170 @@
+// Measuring distance using ultrasonic distance sensor
+#include "settings.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdlib.h>
+
+// Measuring distance using ultrasonic distance sensor
+#include "settings.h"
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdlib.h>
+
+/*volatile for compiler optimization */
+static volatile int pulse = 0;  //duration of sensor pulse echo
+static volatile int i = 0;  //flag for interrupt
+
+
+
+/*Any logical change in PIND2/INT0 triggers the ISR */
+ISR(INT0_vect)
+{
+  if(i == 1)            //Sensor receives echo pulse
+  {
+
+    TCCR1B = 0;
+    pulse = TCNT1;
+    TCNT1 = 0;
+    i = 0;
+  }
+
+  if(i==0)              //Sensor transmits pulse
+  {
+    //PORTB ^= _BV(PB5);
+    TCCR1B |= _BV(CS02) | _BV(CS00);    //Prescaler 1024 (overflow 16msec)
+    i = 1;
+  }
+}
+
+
+int main(void)
+{
+
+    setup();
+  PORTB|=_BV(PB3);
+  PORTB|=_BV(PB0);
+
+  int16_t count_a = 0;  //distance in cm from object
+  //DDRD = 0b11111011;
+  DDRD |= _BV(PD0);     //PIND0 = OUTPUT
+ // DDRD |= _BV(PD3);     //PIND3 = OUTPUT
+  //PORTD |= _BV(PD3);
+
+  DDRD &= ~_BV(PD2);    //PIND2 = INPUT, INT0
+  //_delay_ms(50);
+
+  /*Debugging */
+ // DDRB |= _BV(PB5);     //PINB5 = OUTPUT
+  //PORTB &= ~_BV(PB5);    //PINB5 = LED ON (HIGH)
+
+
+  /* External Interrupt: enable External Interrupt by INT0 pin 2 (PD2) */
+  /* Any logical change of INT0 generates an interrupt request */
+  EICRA |= (~_BV(ISC01)) | (_BV(ISC00));
+  /* Enable External Interrupt Request 0 */
+  EIMSK |= _BV(INT0);
+
+
+
+
+  sei();                //Enable Interrupts
+
+  while(1)
+  {
+
+    /*Trigger the sensor */
+    //PORTD |= 1<<PIND0;A
+    PORTD |= _BV(PD0);
+    _delay_us(15);
+    //PORTD &= ~(1<<PIND0);
+    PORTD &= ~_BV(PD0);
+
+    /*Measure the distance by the duration of the pulse */
+    /*distance(cm) = (pulse_duration/2)/29.1 */
+    count_a = pulse; //distance from object in cm
+
+    if (count_a <15) {
+        //PORTB &= ~_BV(PB5);
+        stop();
+         _delay_ms(300);
+        backward();
+       _delay_ms(500);
+
+        stop();
+      _delay_ms(300);
+        right();
+        _delay_ms(700);
+        stop();
+        _delay_ms(300);
+
+    } else {
+        //PORTB |= _BV(PB5);
+        forward();
+        _delay_ms(200);
+
+    }
+
+
+  }
+}
+
+void setup(void)
+{
+  DDRB|=_BV(PB1);
+  DDRB|=_BV(PB2);
+  DDRB|=_BV(PB2);
+  DDRB|=_BV(PB3);
+  DDRB|=_BV(PB4);
+  DDRD|=_BV(PD5);
+}
+
+void motorAforward() {
+  PORTB|=_BV(PB1);
+  PORTB&=~_BV(PB2);
+
+}
+void motorBforward() {
+  PORTB|=_BV(PB4);
+  PORTD&=~_BV(PD5);
+}
+
+void forward () {
+ motorAforward();
+ motorBforward();
+  }
+void motorAbackward() {
+  PORTB&=~_BV(PB1);
+  PORTB|=_BV(PB2);}
+void motorBbackward() {
+  PORTB&=~_BV(PB4);
+  PORTD|=_BV(PD5);}
+void stop(){
+ PORTB|=_BV(PB1);
+ PORTB|=_BV(PB2);
+PORTB|=_BV(PB4);
+PORTD|=_BV(PD5);
+}
+
+void backward()  {
+ motorAbackward();
+ motorBbackward();
+}
+
+void right() {
+ motorAbackward();
+ motorBforward();
+}
+
+void avoid(){
+ stop();
+_delay_ms(500);
+   backward();
+    _delay_ms(2800);
+stop();
+_delay_ms(500);
+  right();
+  _delay_ms(20);
+}
+

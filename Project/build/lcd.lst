@@ -1,0 +1,366 @@
+GAS LISTING /tmp/ccTVrooD.s 			page 1
+
+
+   1               		.file	"lcd.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   9               	toggle_e:
+  10               	/* prologue: function */
+  11               	/* frame size = 0 */
+  12               	/* stack size = 0 */
+  13               	.L__stack_usage = 0
+  14 0000 299A      		sbi 0x5,1
+  15 0002 85E0      		ldi r24,lo8(5)
+  16 0004 8A95      	1:	dec r24
+  17 0006 01F4      		brne 1b
+  18 0008 0000      		nop
+  19 000a 2998      		cbi 0x5,1
+  20 000c 0895      		ret
+  23               	lcd_write:
+  24 000e CF93      		push r28
+  25               	/* prologue: function */
+  26               	/* frame size = 0 */
+  27               	/* stack size = 1 */
+  28               	.L__stack_usage = 1
+  29 0010 C82F      		mov r28,r24
+  30 0012 6623      		tst r22
+  31 0014 01F0      		breq .L3
+  32 0016 289A      		sbi 0x5,0
+  33 0018 00C0      		rjmp .L4
+  34               	.L3:
+  35 001a 2898      		cbi 0x5,0
+  36               	.L4:
+  37 001c 549A      		sbi 0xa,4
+  38 001e 559A      		sbi 0xa,5
+  39 0020 569A      		sbi 0xa,6
+  40 0022 579A      		sbi 0xa,7
+  41 0024 5F98      		cbi 0xb,7
+  42 0026 5E98      		cbi 0xb,6
+  43 0028 5D98      		cbi 0xb,5
+  44 002a 5C98      		cbi 0xb,4
+  45 002c C7FD      		sbrc r28,7
+  46 002e 5F9A      		sbi 0xb,7
+  47               	.L5:
+  48 0030 C6FD      		sbrc r28,6
+  49 0032 5E9A      		sbi 0xb,6
+  50               	.L6:
+  51 0034 C5FD      		sbrc r28,5
+  52 0036 5D9A      		sbi 0xb,5
+  53               	.L7:
+  54 0038 C4FD      		sbrc r28,4
+  55 003a 5C9A      		sbi 0xb,4
+  56               	.L8:
+  57 003c 0E94 0000 		call toggle_e
+  58 0040 5F98      		cbi 0xb,7
+  59 0042 5E98      		cbi 0xb,6
+  60 0044 5D98      		cbi 0xb,5
+GAS LISTING /tmp/ccTVrooD.s 			page 2
+
+
+  61 0046 5C98      		cbi 0xb,4
+  62 0048 C3FD      		sbrc r28,3
+  63 004a 5F9A      		sbi 0xb,7
+  64               	.L9:
+  65 004c C2FD      		sbrc r28,2
+  66 004e 5E9A      		sbi 0xb,6
+  67               	.L10:
+  68 0050 C1FD      		sbrc r28,1
+  69 0052 5D9A      		sbi 0xb,5
+  70               	.L11:
+  71 0054 C0FD      		sbrc r28,0
+  72 0056 5C9A      		sbi 0xb,4
+  73               	.L12:
+  74 0058 0E94 0000 		call toggle_e
+  75 005c 5C9A      		sbi 0xb,4
+  76 005e 5D9A      		sbi 0xb,5
+  77 0060 5E9A      		sbi 0xb,6
+  78 0062 5F9A      		sbi 0xb,7
+  79 0064 8FE3      		ldi r24,lo8(7999)
+  80 0066 9FE1      		ldi r25,hi8(7999)
+  81 0068 0197      	1:	sbiw r24,1
+  82 006a 01F4      		brne 1b
+  83 006c 00C0      		rjmp .
+  84 006e 0000      		nop
+  85               	/* epilogue start */
+  86 0070 CF91      		pop r28
+  87 0072 0895      		ret
+  90               	lcd_read.constprop.0:
+  91               	/* prologue: function */
+  92               	/* frame size = 0 */
+  93               	/* stack size = 0 */
+  94               	.L__stack_usage = 0
+  95 0074 2898      		cbi 0x5,0
+  96 0076 5D9A      		sbi 0xb,5
+  97 0078 5498      		cbi 0xa,4
+  98 007a 5598      		cbi 0xa,5
+  99 007c 5698      		cbi 0xa,6
+ 100 007e 5798      		cbi 0xa,7
+ 101 0080 299A      		sbi 0x5,1
+ 102 0082 85E0      		ldi r24,lo8(5)
+ 103 0084 8A95      	1:	dec r24
+ 104 0086 01F4      		brne 1b
+ 105 0088 0000      		nop
+ 106 008a 4C9B      		sbis 0x9,4
+ 107 008c 00C0      		rjmp .L44
+ 108 008e 80E1      		ldi r24,lo8(16)
+ 109 0090 00C0      		rjmp .L36
+ 110               	.L44:
+ 111 0092 80E0      		ldi r24,0
+ 112               	.L36:
+ 113 0094 4D99      		sbic 0x9,5
+ 114 0096 8062      		ori r24,lo8(32)
+ 115               	.L37:
+ 116 0098 4E99      		sbic 0x9,6
+ 117 009a 8064      		ori r24,lo8(64)
+ 118               	.L38:
+ 119 009c 4F99      		sbic 0x9,7
+GAS LISTING /tmp/ccTVrooD.s 			page 3
+
+
+ 120 009e 8068      		ori r24,lo8(-128)
+ 121               	.L39:
+ 122 00a0 2998      		cbi 0x5,1
+ 123 00a2 95E0      		ldi r25,lo8(5)
+ 124 00a4 9A95      	1:	dec r25
+ 125 00a6 01F4      		brne 1b
+ 126 00a8 0000      		nop
+ 127 00aa 299A      		sbi 0x5,1
+ 128 00ac 95E0      		ldi r25,lo8(5)
+ 129 00ae 9A95      	1:	dec r25
+ 130 00b0 01F4      		brne 1b
+ 131 00b2 0000      		nop
+ 132 00b4 4C99      		sbic 0x9,4
+ 133 00b6 8160      		ori r24,lo8(1)
+ 134               	.L40:
+ 135 00b8 4D99      		sbic 0x9,5
+ 136 00ba 8260      		ori r24,lo8(2)
+ 137               	.L41:
+ 138 00bc 4E99      		sbic 0x9,6
+ 139 00be 8460      		ori r24,lo8(4)
+ 140               	.L42:
+ 141 00c0 4F99      		sbic 0x9,7
+ 142 00c2 8860      		ori r24,lo8(8)
+ 143               	.L43:
+ 144 00c4 2998      		cbi 0x5,1
+ 145 00c6 0895      		ret
+ 147               	.global	lcd_command
+ 149               	lcd_command:
+ 150               	/* prologue: function */
+ 151               	/* frame size = 0 */
+ 152               	/* stack size = 0 */
+ 153               	.L__stack_usage = 0
+ 154 00c8 60E0      		ldi r22,0
+ 155 00ca 0C94 0000 		jmp lcd_write
+ 157               	.global	lcd_data
+ 159               	lcd_data:
+ 160               	/* prologue: function */
+ 161               	/* frame size = 0 */
+ 162               	/* stack size = 0 */
+ 163               	.L__stack_usage = 0
+ 164 00ce 61E0      		ldi r22,lo8(1)
+ 165 00d0 0C94 0000 		jmp lcd_write
+ 167               	.global	lcd_gotoxy
+ 169               	lcd_gotoxy:
+ 170               	/* prologue: function */
+ 171               	/* frame size = 0 */
+ 172               	/* stack size = 0 */
+ 173               	.L__stack_usage = 0
+ 174 00d4 6111      		cpse r22,__zero_reg__
+ 175 00d6 00C0      		rjmp .L63
+ 176 00d8 8058      		subi r24,lo8(-(-128))
+ 177 00da 00C0      		rjmp .L64
+ 178               	.L63:
+ 179 00dc 8054      		subi r24,lo8(-(-64))
+ 180               	.L64:
+ 181 00de 0C94 0000 		jmp lcd_command
+ 183               	.global	lcd_getxy
+GAS LISTING /tmp/ccTVrooD.s 			page 4
+
+
+ 185               	lcd_getxy:
+ 186               	/* prologue: function */
+ 187               	/* frame size = 0 */
+ 188               	/* stack size = 0 */
+ 189               	.L__stack_usage = 0
+ 190               	.L66:
+ 191 00e2 0E94 0000 		call lcd_read.constprop.0
+ 192 00e6 87FD      		sbrc r24,7
+ 193 00e8 00C0      		rjmp .L66
+ 194 00ea 85E1      		ldi r24,lo8(21)
+ 195 00ec 8A95      	1:	dec r24
+ 196 00ee 01F4      		brne 1b
+ 197 00f0 0000      		nop
+ 198 00f2 0E94 0000 		call lcd_read.constprop.0
+ 199 00f6 90E0      		ldi r25,0
+ 200 00f8 0895      		ret
+ 202               	.global	lcd_clrscr
+ 204               	lcd_clrscr:
+ 205               	/* prologue: function */
+ 206               	/* frame size = 0 */
+ 207               	/* stack size = 0 */
+ 208               	.L__stack_usage = 0
+ 209 00fa 81E0      		ldi r24,lo8(1)
+ 210 00fc 0C94 0000 		jmp lcd_command
+ 212               	.global	lcd_home
+ 214               	lcd_home:
+ 215               	/* prologue: function */
+ 216               	/* frame size = 0 */
+ 217               	/* stack size = 0 */
+ 218               	.L__stack_usage = 0
+ 219 0100 82E0      		ldi r24,lo8(2)
+ 220 0102 0C94 0000 		jmp lcd_command
+ 222               	.global	lcd_putc
+ 224               	lcd_putc:
+ 225               	/* prologue: function */
+ 226               	/* frame size = 0 */
+ 227               	/* stack size = 0 */
+ 228               	.L__stack_usage = 0
+ 229 0106 61E0      		ldi r22,lo8(1)
+ 230 0108 0C94 0000 		jmp lcd_write
+ 232               	.global	lcd_puts
+ 234               	lcd_puts:
+ 235 010c CF93      		push r28
+ 236 010e DF93      		push r29
+ 237               	/* prologue: function */
+ 238               	/* frame size = 0 */
+ 239               	/* stack size = 2 */
+ 240               	.L__stack_usage = 2
+ 241 0110 EC01      		movw r28,r24
+ 242               	.L72:
+ 243 0112 8991      		ld r24,Y+
+ 244 0114 8823      		tst r24
+ 245 0116 01F0      		breq .L74
+ 246 0118 0E94 0000 		call lcd_putc
+ 247 011c 00C0      		rjmp .L72
+ 248               	.L74:
+ 249               	/* epilogue start */
+GAS LISTING /tmp/ccTVrooD.s 			page 5
+
+
+ 250 011e DF91      		pop r29
+ 251 0120 CF91      		pop r28
+ 252 0122 0895      		ret
+ 254               	.global	lcd_puts_p
+ 256               	lcd_puts_p:
+ 257 0124 CF93      		push r28
+ 258 0126 DF93      		push r29
+ 259               	/* prologue: function */
+ 260               	/* frame size = 0 */
+ 261               	/* stack size = 2 */
+ 262               	.L__stack_usage = 2
+ 263 0128 FC01      		movw r30,r24
+ 264               	.L76:
+ 265               	/* #APP */
+ 266               	 ;  492 "src/lcd.c" 1
+ 267 012a 8491      		lpm r24, Z
+ 268               		
+ 269               	 ;  0 "" 2
+ 270               	/* #NOAPP */
+ 271 012c EF01      		movw r28,r30
+ 272 012e 2196      		adiw r28,1
+ 273 0130 8823      		tst r24
+ 274 0132 01F0      		breq .L78
+ 275 0134 0E94 0000 		call lcd_putc
+ 276 0138 FE01      		movw r30,r28
+ 277 013a 00C0      		rjmp .L76
+ 278               	.L78:
+ 279               	/* epilogue start */
+ 280 013c DF91      		pop r29
+ 281 013e CF91      		pop r28
+ 282 0140 0895      		ret
+ 284               	.global	lcd_init
+ 286               	lcd_init:
+ 287 0142 CF93      		push r28
+ 288               	/* prologue: function */
+ 289               	/* frame size = 0 */
+ 290               	/* stack size = 1 */
+ 291               	.L__stack_usage = 1
+ 292 0144 C82F      		mov r28,r24
+ 293 0146 209A      		sbi 0x4,0
+ 294 0148 559A      		sbi 0xa,5
+ 295 014a 219A      		sbi 0x4,1
+ 296 014c 549A      		sbi 0xa,4
+ 297 014e 559A      		sbi 0xa,5
+ 298 0150 569A      		sbi 0xa,6
+ 299 0152 579A      		sbi 0xa,7
+ 300 0154 8FEF      		ldi r24,lo8(-1537)
+ 301 0156 99EF      		ldi r25,hi8(-1537)
+ 302 0158 0197      	1:	sbiw r24,1
+ 303 015a 01F4      		brne 1b
+ 304 015c 00C0      		rjmp .
+ 305 015e 0000      		nop
+ 306 0160 5D9A      		sbi 0xb,5
+ 307 0162 5C9A      		sbi 0xb,4
+ 308 0164 0E94 0000 		call toggle_e
+ 309 0168 8FE1      		ldi r24,lo8(19999)
+ 310 016a 9EE4      		ldi r25,hi8(19999)
+GAS LISTING /tmp/ccTVrooD.s 			page 6
+
+
+ 311 016c 0197      	1:	sbiw r24,1
+ 312 016e 01F4      		brne 1b
+ 313 0170 00C0      		rjmp .
+ 314 0172 0000      		nop
+ 315 0174 0E94 0000 		call toggle_e
+ 316 0178 8FEF      		ldi r24,lo8(255)
+ 317 017a 90E0      		ldi r25,hi8(255)
+ 318 017c 0197      	1:	sbiw r24,1
+ 319 017e 01F4      		brne 1b
+ 320 0180 00C0      		rjmp .
+ 321 0182 0000      		nop
+ 322 0184 0E94 0000 		call toggle_e
+ 323 0188 8FEF      		ldi r24,lo8(255)
+ 324 018a 90E0      		ldi r25,hi8(255)
+ 325 018c 0197      	1:	sbiw r24,1
+ 326 018e 01F4      		brne 1b
+ 327 0190 00C0      		rjmp .
+ 328 0192 0000      		nop
+ 329 0194 5C98      		cbi 0xb,4
+ 330 0196 0E94 0000 		call toggle_e
+ 331 019a 8FEF      		ldi r24,lo8(255)
+ 332 019c 90E0      		ldi r25,hi8(255)
+ 333 019e 0197      	1:	sbiw r24,1
+ 334 01a0 01F4      		brne 1b
+ 335 01a2 00C0      		rjmp .
+ 336 01a4 0000      		nop
+ 337 01a6 88E2      		ldi r24,lo8(40)
+ 338 01a8 0E94 0000 		call lcd_command
+ 339 01ac 88E0      		ldi r24,lo8(8)
+ 340 01ae 0E94 0000 		call lcd_command
+ 341 01b2 0E94 0000 		call lcd_clrscr
+ 342 01b6 86E0      		ldi r24,lo8(6)
+ 343 01b8 0E94 0000 		call lcd_command
+ 344 01bc 8C2F      		mov r24,r28
+ 345               	/* epilogue start */
+ 346 01be CF91      		pop r28
+ 347 01c0 0C94 0000 		jmp lcd_command
+ 349               		.ident	"GCC: (AVR_8_bit_GNU_Toolchain_3.6.1_1752) 5.4.0"
+GAS LISTING /tmp/ccTVrooD.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 lcd.c
+     /tmp/ccTVrooD.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccTVrooD.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccTVrooD.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccTVrooD.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccTVrooD.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccTVrooD.s:9      .text:0000000000000000 toggle_e
+     /tmp/ccTVrooD.s:23     .text:000000000000000e lcd_write
+     /tmp/ccTVrooD.s:90     .text:0000000000000074 lcd_read.constprop.0
+     /tmp/ccTVrooD.s:149    .text:00000000000000c8 lcd_command
+     /tmp/ccTVrooD.s:159    .text:00000000000000ce lcd_data
+     /tmp/ccTVrooD.s:169    .text:00000000000000d4 lcd_gotoxy
+     /tmp/ccTVrooD.s:185    .text:00000000000000e2 lcd_getxy
+     /tmp/ccTVrooD.s:204    .text:00000000000000fa lcd_clrscr
+     /tmp/ccTVrooD.s:214    .text:0000000000000100 lcd_home
+     /tmp/ccTVrooD.s:224    .text:0000000000000106 lcd_putc
+     /tmp/ccTVrooD.s:234    .text:000000000000010c lcd_puts
+     /tmp/ccTVrooD.s:256    .text:0000000000000124 lcd_puts_p
+     /tmp/ccTVrooD.s:286    .text:0000000000000142 lcd_init
+
+NO UNDEFINED SYMBOLS
